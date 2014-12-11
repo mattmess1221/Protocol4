@@ -46,7 +46,15 @@ public class MultiplayerMenu {
     }
 
     public static void refresh() {
-        mc.displayGuiScreen(new GuiMultiplayer(screen));
+        try {
+            Field field = getFieldsOfType(GuiMultiplayer.class, GuiScreen.class)[0];
+            field.setAccessible(true);
+            GuiScreen screen = (GuiScreen) field.get(MultiplayerMenu.screen);
+            mc.displayGuiScreen(new GuiMultiplayer(screen));
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
-
 }
