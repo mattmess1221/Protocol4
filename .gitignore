@@ -1,0 +1,10 @@
+.gradle/
+.settings/
+bin/
+build/
+run/
+
+src/api/
+
+.classpath
+.project
