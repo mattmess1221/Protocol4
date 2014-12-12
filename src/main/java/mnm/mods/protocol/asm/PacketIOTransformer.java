@@ -5,7 +5,6 @@ import com.mumfrey.liteloader.transformers.ClassTransformer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -14,7 +13,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import java.io.IOException;
 import java.util.ListIterator;
 
 public class PacketIOTransformer extends ClassTransformer implements Opcodes {
@@ -48,7 +46,7 @@ public class PacketIOTransformer extends ClassTransformer implements Opcodes {
         if (basicClass != null) {
             ClassNode cn = readClass(basicClass, false);
 
-            if (hasSuper(cn.name, Packet) && (cn.access & ACC_ABSTRACT) != ACC_ABSTRACT) {
+            if (hasSuper(cn, Packet) && (cn.access & ACC_ABSTRACT) != ACC_ABSTRACT) {
                 boolean read = false;
                 boolean write = false;
 
@@ -88,21 +86,13 @@ public class PacketIOTransformer extends ClassTransformer implements Opcodes {
         return basicClass;
     }
 
-    private boolean hasSuper(String internalName, Obf packet) {
+    private boolean hasSuper(ClassNode cn, Obf packet) {
         boolean has = false;
-        if (internalName != null) {
-            try {
-                ClassNode cn = readClass(internalName);
-                String superName = cn.superName;
-                if (arrayHas(makeRef(packet.names), superName)) {
-                    has = true;
-                } else {
-                    has = hasSuper(superName, packet);
-                }
-            } catch (IOException io) {
-                logger.error(io.getMessage());
-            }
+        String superName = cn.superName;
+        if (arrayHas(makeRef(packet.names), superName)) {
+            has = true;
         }
+
         return has;
     }
 
@@ -112,17 +102,6 @@ public class PacketIOTransformer extends ClassTransformer implements Opcodes {
             newNames[i] = names[i].replace('.', '/');
         }
         return newNames;
-    }
-
-    private ClassNode readClass(String internalName) throws IOException {
-        try {
-            ClassReader cr = new ClassReader(internalName.replace('/', '.'));
-            ClassNode cn = new ClassNode();
-            cr.accept(cn, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-            return cn;
-        } catch (IOException io) {
-            throw new IOException("Unable to read class " + internalName.replace('/', '.'), io);
-        }
     }
 
     private <T> boolean arrayHas(T[] names, T target) {
