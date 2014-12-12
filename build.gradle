@@ -12,19 +12,40 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-	}
+    }
 }
 
 apply plugin: 'liteloader'
 
 archivesBaseName = "Protocol4"
-version = "1.0"
 
 minecraft {
-    version = "1.7.10"
+    version = project.mcversion
     runDir = "run"
-}
 
+    replace "@VERSION@":project.version
+}
+processResources{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    inputs.property "revision", project.revision
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'litemod.json'
+
+        // replace version and mcversion
+        expand 'version':project.version,
+        'mcversion':project.minecraft.version,
+        'revision':project.revision
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'litemod.json'
+    }
+}
 dependencies {
     compile "org.ow2.asm:asm-debug-all:5.0.3"
 }

@@ -24,6 +24,10 @@ import java.util.Map;
 public class LiteModProtocol4 implements RenderListener {
 
     private static final Logger logger = LogManager.getLogger("Protocol4");
+
+    private static final String NAME = "Protocol4";
+    private static final String VERSION = "@VERSION@";
+
     public static LiteModProtocol4 instance;
 
     private Map<EnumProtocols, VersionHandler> handlers = Maps.newEnumMap(EnumProtocols.class);
@@ -31,12 +35,12 @@ public class LiteModProtocol4 implements RenderListener {
 
     @Override
     public String getName() {
-        return "Protocol4";
+        return NAME;
     }
 
     @Override
     public String getVersion() {
-        return "1.0";
+        return VERSION;
     }
 
     @Override
