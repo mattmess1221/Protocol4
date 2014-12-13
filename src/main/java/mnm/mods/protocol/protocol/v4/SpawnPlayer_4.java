@@ -5,7 +5,6 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.util.UUIDTypeAdapter;
 
 import mnm.mods.protocol.interfaces.PacketRead;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.DataWatcher;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
@@ -55,7 +54,7 @@ public class SpawnPlayer_4 implements PacketRead {
             UUID uuid = UUIDTypeAdapter.fromString(struuid);
             String name = buffer.readStringFromBuffer(16);
             profile = new GameProfile(uuid, name);
-            Minecraft.getMinecraft().func_152347_ac().fillProfileProperties(profile, true);
+            ProfileCache.fillProfileProperties(profile, true);
             x = buffer.readInt();
             y = buffer.readInt();
             z = buffer.readInt();
