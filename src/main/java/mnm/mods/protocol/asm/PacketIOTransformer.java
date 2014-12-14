@@ -42,7 +42,16 @@ public class PacketIOTransformer extends ClassTransformer implements Opcodes {
     public PacketIOTransformer() {}
 
     @Override
-    public final byte[] transform(String name, String transformedName, byte[] basicClass) {
+    public byte[] transform(String name, String transformedName, byte[] basicClass) {
+        try {
+            basicClass = transform(basicClass);
+        } catch (Throwable t) {
+            logger.warn("An error occured while trying to process " + transformedName, t);
+        }
+        return basicClass;
+    }
+
+    private byte[] transform(byte[] basicClass) {
         if (basicClass != null) {
             ClassNode cn = readClass(basicClass, false);
 
