@@ -10,7 +10,6 @@ import mnm.mods.protocol.interfaces.VersionHandler;
 import mnm.mods.protocol.protocol.v4.Handler_4;
 import mnm.mods.protocol.protocol.v5.Handler_5;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
@@ -31,7 +30,7 @@ public class LiteModProtocol4 implements RenderListener {
     public static LiteModProtocol4 instance;
 
     private Map<EnumProtocols, VersionHandler> handlers = Maps.newEnumMap(EnumProtocols.class);
-    public EnumProtocols protocol = EnumProtocols.CURRENT;
+    private EnumProtocols protocol = EnumProtocols.CURRENT;
 
     @Override
     public String getName() {
@@ -84,13 +83,17 @@ public class LiteModProtocol4 implements RenderListener {
 
     @Override
     public void onRenderGui(GuiScreen currentScreen) {
-        if (currentScreen instanceof GuiMultiplayer) {
-            MultiplayerMenu.insertButton((GuiMultiplayer) currentScreen, this.protocol);
-        }
+        MultiplayerMenu.onRenderGui(currentScreen);
     }
 
     public void setProtocol(EnumProtocols protocol) {
-        this.protocol = protocol;
+        if (Minecraft.getMinecraft().theWorld == null) {
+            this.protocol = protocol;
+        }
+    }
+
+    public EnumProtocols getProtocol() {
+        return protocol;
     }
 
     @Override

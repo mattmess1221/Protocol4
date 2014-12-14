@@ -13,24 +13,11 @@ public class ProtocolButton extends GuiButton {
     public ProtocolButton(int id, int x, int y, EnumProtocols version) {
         super(id, x, y, 35, 20, getLast(version.getSupportedVersions()));
         protocol = version;
-        index = getIndex(protocol);
+        index = protocol.ordinal();
     }
 
     private static String getLast(String[] versions) {
         return versions[versions.length - 1];
-    }
-
-    private static int getIndex(EnumProtocols protocol) {
-        if (protocol == null) {
-            throw new NullPointerException();
-        }
-        EnumProtocols[] values = EnumProtocols.values();
-        for (int i = 0; i < values.length; i++) {
-            if (values[i].equals(protocol)) {
-                return i;
-            }
-        }
-        throw new IllegalArgumentException("What the? Enum wasn't in the array.");
     }
 
     @Override
@@ -50,7 +37,7 @@ public class ProtocolButton extends GuiButton {
     @Override
     public void mouseReleased(int x, int y) {
         if (this.mousePressed(Minecraft.getMinecraft(), x, y)) {
-            selectProtocol(index++);
+            selectProtocol(1);
         }
         super.mouseReleased(x, y);
     }
