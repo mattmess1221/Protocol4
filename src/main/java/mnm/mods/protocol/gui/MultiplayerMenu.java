@@ -15,12 +15,14 @@ import java.util.List;
 public class MultiplayerMenu {
 
     private static Minecraft mc = Minecraft.getMinecraft();
-    private static GuiScreen screen;
+    private static GuiMultiplayer screen;
 
     public static void onRenderGui(GuiScreen screen) {
-        MultiplayerMenu.screen = screen;
         if (screen instanceof GuiMultiplayer) {
-            insertButton((GuiMultiplayer) screen, LiteModProtocol4.instance.getProtocol());
+            MultiplayerMenu.screen = (GuiMultiplayer) screen;
+            if (!buttonListHasButton(screen)) {
+                insertButton((GuiMultiplayer) screen, LiteModProtocol4.instance.getProtocol());
+            }
         }
     }
 
@@ -49,6 +51,30 @@ public class MultiplayerMenu {
             }
         }
         return fields.toArray(new Field[0]);
+    }
+
+    private static boolean buttonListHasButton(GuiScreen screen) {
+        Field field = getFieldsOfType(GuiScreen.class, List.class)[0];
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
+        try {
+            List<?> list = (List<?>) field.get(screen);
+            return listHasType(list, ProtocolButton.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static <T> boolean listHasType(List<?> list, Class<T> type) {
+        for (Object obj : list) {
+            if (type.isAssignableFrom(obj.getClass())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void refresh() {
