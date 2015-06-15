@@ -1,15 +1,15 @@
 package mnm.mods.protocol.protocol.v4;
 
-import com.google.common.collect.Maps;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.PropertyMap;
+import java.util.Map;
+import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 
 import org.apache.logging.log4j.LogManager;
 
-import java.util.Map;
-import java.util.UUID;
+import com.google.common.collect.Maps;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.PropertyMap;
 
 /*
  * Handles the retrieving of profile properties and caches them.
@@ -24,7 +24,7 @@ public class ProfileCache {
         if (cache.containsKey(profile.getId())) {
             profile.getProperties().putAll(cache.get(profile.getId()));
         } else {
-            Minecraft.getMinecraft().func_152347_ac().fillProfileProperties(profile, secure);
+            Minecraft.getMinecraft().getSessionService().fillProfileProperties(profile, secure);
             if (!profile.getProperties().isEmpty()) {
                 cache.put(profile.getId(), profile.getProperties());
             } else {

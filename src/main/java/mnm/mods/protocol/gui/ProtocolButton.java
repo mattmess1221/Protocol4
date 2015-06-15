@@ -24,7 +24,7 @@ public class ProtocolButton extends GuiButton {
     public void drawButton(Minecraft mc, int x, int y) {
         super.drawButton(mc, x, y);
         String[] versions = this.protocol.getSupportedVersions();
-        if (this.field_146123_n) {
+        if (this.hovered) {
             int counter = mc.ingameGUI.getUpdateCounter();
             counter /= 20;
             int i = counter % versions.length;

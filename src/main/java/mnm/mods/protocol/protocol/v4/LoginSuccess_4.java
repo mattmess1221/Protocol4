@@ -1,13 +1,13 @@
 package mnm.mods.protocol.protocol.v4;
 
-import com.mojang.util.UUIDTypeAdapter;
+import java.io.IOException;
 
 import mnm.mods.protocol.interfaces.PacketRead;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.login.server.S02PacketLoginSuccess;
 
-import java.io.IOException;
+import com.mojang.util.UUIDTypeAdapter;
 
 public class LoginSuccess_4 implements PacketRead {
 
@@ -22,8 +22,8 @@ public class LoginSuccess_4 implements PacketRead {
         uuid = UUIDTypeAdapter.fromString(uuid).toString();
 
         buffer.writerIndex(start);
-        buffer.writeStringToBuffer(uuid);
-        buffer.writeStringToBuffer(name);
+        buffer.writeString(uuid);
+        buffer.writeString(name);
 
     }
 

@@ -1,0 +1,70 @@
+{
+	"obfuscation": {
+		"methods": [
+			{
+				"id" : "writePacketData",
+				"mcp": "writePacketData",
+				"srg": "func_148840_b",
+				"obf": "b"
+			},
+			{
+				"id": "readPacketData",
+				"mcp": "readPacketData",
+				"srg": "func_148837_a",
+				"obf": "a"
+			}
+		],
+		"classes": [
+			{
+				"id": "Packet",
+				"mcp": "net.minecraft.network.Packet",
+				"obf": "id"
+			},
+			{
+				"id": "PacketBuffer",
+				"mcp": "net.minecraft.network.PacketBuffer",
+				"obf": "hd"
+			},
+			{
+				"id" : "MessageSerializer",
+				"mcp": "net.minecraft.util.MessageSerializer",
+				"obf": "hf"
+			},
+			{
+				"id": "MessageDeserializer",
+				"mcp": "net.minecraft.util.MessageDeserializer",
+				"obf": "he"
+			},
+			{
+				"id": "PacketIO",
+				"mcp": "mnm.mods.protocol.PacketIO"
+			}
+		]
+	},
+	"descriptors": [
+		{
+			"id": "writePacketData",
+			"owner": "${Packet}",
+			"name": "${writePacketData}",
+			"return": "VOID",
+			"args": [ "${PacketBuffer}" ]
+		},
+		{
+			"id": "readPacketData",
+			"owner": "${Packet}",
+			"name": "${readPacketData}",
+			"return": "VOID",
+			"args": [ "${PacketBuffer}" ]
+		},
+		{
+			"id": "onReadPacketData",
+			"owner": "${PacketIO}",
+			"name": "readPacketData"
+		}
+	],
+	"events": [
+		"name": "onPacketRead",
+		"injections": [ { "type": "INVOKE", "method": "${readPacketData}" } ],
+		"listeners": [ "${onPacketRead}" ]
+	]
+}

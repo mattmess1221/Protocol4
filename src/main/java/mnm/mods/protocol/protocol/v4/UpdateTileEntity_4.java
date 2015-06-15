@@ -1,6 +1,6 @@
 package mnm.mods.protocol.protocol.v4;
 
-import com.mojang.authlib.GameProfile;
+import java.io.IOException;
 
 import mnm.mods.protocol.interfaces.PacketRead;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,7 +10,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.StringUtils;
 
-import java.io.IOException;
+import com.mojang.authlib.GameProfile;
 
 public class UpdateTileEntity_4 implements PacketRead {
 
@@ -37,7 +37,7 @@ public class UpdateTileEntity_4 implements PacketRead {
             if (nbt.hasKey("ExtraType") && !StringUtils.isNullOrEmpty(nbt.getString("ExtraType"))) {
                 String name = nbt.getString("ExtraType");
                 NBTTagCompound profile = new NBTTagCompound();
-                NBTUtil.func_152460_a(new NBTTagCompound(), new GameProfile(null, name));
+                NBTUtil.writeGameProfile(new NBTTagCompound(), new GameProfile(null, name));
                 nbt.setTag("Owner", profile);
             }
 

@@ -1,8 +1,9 @@
 package mnm.mods.protocol.protocol.v4;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.util.UUIDTypeAdapter;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 import mnm.mods.protocol.interfaces.PacketRead;
 import net.minecraft.entity.DataWatcher;
@@ -10,10 +11,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.S0CPacketSpawnPlayer;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.util.UUIDTypeAdapter;
 
 public class SpawnPlayer_4 implements PacketRead {
 
@@ -67,16 +67,16 @@ public class SpawnPlayer_4 implements PacketRead {
         void writeBuffer(PacketBuffer buffer) throws IOException {
             buffer.writeVarIntToBuffer(this.entityID);
             UUID uuid = this.profile.getId();
-            buffer.writeStringToBuffer(uuid == null ? "" : uuid.toString());
-            buffer.writeStringToBuffer(this.profile.getName());
+            buffer.writeString(uuid == null ? "" : uuid.toString());
+            buffer.writeString(this.profile.getName());
             buffer.writeVarIntToBuffer(this.profile.getProperties().size());
             Iterator<?> iterator = this.profile.getProperties().values().iterator();
 
             while (iterator.hasNext()) {
                 Property property = (Property) iterator.next();
-                buffer.writeStringToBuffer(property.getName());
-                buffer.writeStringToBuffer(property.getValue());
-                buffer.writeStringToBuffer(property.getSignature());
+                buffer.writeString(property.getName());
+                buffer.writeString(property.getValue());
+                buffer.writeString(property.getSignature());
             }
 
             buffer.writeInt(this.x);

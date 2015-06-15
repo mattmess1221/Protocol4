@@ -9,20 +9,27 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = 'minecrell'
+            url = "http://repo.minecrell.net/snapshots"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        //classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
-apply plugin: 'liteloader'
+apply plugin: 'net.minecrell.vanilla.base'
 
 archivesBaseName = "Protocol4"
+version = '1.1'
+group = 'mnm.mods'
+ext.revision = 4
 
 minecraft {
-    version = project.mcversion
+    version = '1.8'
     runDir = "run"
-
+	mappings = "snapshot_20150606"
     replace "@VERSION@":project.version
 }
 processResources{
@@ -46,6 +53,16 @@ processResources{
         exclude 'litemod.json'
     }
 }
-dependencies {
-    compile "org.ow2.asm:asm-debug-all:5.0.3"
+repositories {
+    flatDir {
+        dirs 'deps'
+    }
 }
+dependencies {
+    compile ':liteloader:1.8-SNAPSHOT-mcpnames'
+}
+jar {
+	extension "litemod"
+	appendix "mc${minecraft.version}"
+}
+reobf.setSrgMcp()

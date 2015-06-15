@@ -1,9 +1,9 @@
 {
     "mcversion": "${mcversion}",
     "name": "Protocol4",
-    "revision": ${revision},
+    "revision": "${revision}",
     "author": "killjoy1221",
     "version": "${version}",
-    "description": "Allows 1.7.10 clients to join 1.7.5 servers.",
+    "description": "Allows client connections to outdated servers.",
     "classTransformerClasses": "mnm.mods.protocol.asm.PacketIOTransformer"
 }

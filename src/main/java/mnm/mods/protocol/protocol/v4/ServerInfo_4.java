@@ -1,14 +1,14 @@
 package mnm.mods.protocol.protocol.v4;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import java.io.IOException;
 
 import mnm.mods.protocol.interfaces.PacketRead;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.status.server.S00PacketServerInfo;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class ServerInfo_4 implements PacketRead {
 
@@ -29,7 +29,7 @@ public class ServerInfo_4 implements PacketRead {
 
         buffer.clear();
         buffer.writeVarIntToBuffer(0x00);
-        buffer.writeStringToBuffer(gson.toJson(response));
+        buffer.writeString(gson.toJson(response));
     }
 
     @Override

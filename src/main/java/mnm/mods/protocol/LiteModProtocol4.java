@@ -1,13 +1,14 @@
 package mnm.mods.protocol;
 
-import com.google.common.collect.Maps;
-import com.mumfrey.liteloader.RenderListener;
+import java.io.File;
+import java.util.Map;
 
 import mnm.mods.protocol.gui.MultiplayerMenu;
 import mnm.mods.protocol.interfaces.PacketRead;
 import mnm.mods.protocol.interfaces.PacketWrite;
 import mnm.mods.protocol.interfaces.VersionHandler;
 import mnm.mods.protocol.protocol.v4.Handler_4;
+import mnm.mods.protocol.protocol.v47.Handler_47;
 import mnm.mods.protocol.protocol.v5.Handler_5;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,8 +18,8 @@ import net.minecraft.network.PacketBuffer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.mumfrey.liteloader.RenderListener;
 
 public class LiteModProtocol4 implements RenderListener {
 
@@ -48,6 +49,7 @@ public class LiteModProtocol4 implements RenderListener {
 
         addHandler(new Handler_4());
         addHandler(new Handler_5());
+        addHandler(new Handler_47());
     }
 
     private void addHandler(VersionHandler handler) {
@@ -57,11 +59,10 @@ public class LiteModProtocol4 implements RenderListener {
     public void readPacketData(Packet packet, PacketBuffer buffer) {
         int read = buffer.readerIndex();
         try {
-            if (!Minecraft.getMinecraft().isSingleplayer()) {
-                PacketRead reader = handlers.get(protocol).getReader(packet.getClass());
-                if (reader != null)
-                    reader.readPacketData(buffer);
-            }
+            PacketRead reader = handlers.get(protocol).getReader(packet.getClass());
+            if (reader != null)
+                reader.readPacketData(buffer);
+
         } catch (Throwable e) {
             logger.throwing(e);
         } finally {
@@ -71,11 +72,10 @@ public class LiteModProtocol4 implements RenderListener {
 
     public void writePacketData(Packet packet, PacketBuffer buffer) {
         try {
-            if (!Minecraft.getMinecraft().isSingleplayer()) {
-                PacketWrite writer = handlers.get(protocol).getWriter(packet.getClass());
-                if (writer != null)
-                    writer.writePacketData(buffer);
-            }
+            PacketWrite writer = handlers.get(protocol).getWriter(packet.getClass());
+            if (writer != null)
+                writer.writePacketData(buffer);
+
         } catch (Throwable e) {
             logger.throwing(e);
         }
