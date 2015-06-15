@@ -18,7 +18,7 @@ public class MsgSerializerCV extends ClassVisitor {
         // ensure name and desc are correct
         if (encode != -1) {
             String desc2 = PacketIOTransformer.buildDescriptor(encode, "V",
-                    "io.netty.channel.ChannelHandlerContext", PacketObf.Packet, "io.netty.butter.ByteBuf");
+                    "io.netty.channel.ChannelHandlerContext", PacketObf.Packet, "io.netty.buffer.ByteBuf");
             if (desc.equals(desc2)) {
                 mv = new EncodeMV(mv);
             }

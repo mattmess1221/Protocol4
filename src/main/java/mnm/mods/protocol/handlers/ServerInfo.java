@@ -1,4 +1,4 @@
-package mnm.mods.protocol.protocol;
+package mnm.mods.protocol.handlers;
 
 import java.io.IOException;
 

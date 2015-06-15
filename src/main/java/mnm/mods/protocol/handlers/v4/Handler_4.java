@@ -1,10 +1,13 @@
-package mnm.mods.protocol.protocol.v4;
+package mnm.mods.protocol.handlers.v4;
 
 import mnm.mods.protocol.AbstractHandler;
 import mnm.mods.protocol.EnumProtocols;
-import mnm.mods.protocol.protocol.Handshake;
-import mnm.mods.protocol.protocol.ServerInfo;
+import mnm.mods.protocol.handlers.Handshake;
+import mnm.mods.protocol.handlers.ServerInfo;
 
+/**
+ * Handler for 1.7.5
+ */
 public class Handler_4 extends AbstractHandler {
 
     public Handler_4() {

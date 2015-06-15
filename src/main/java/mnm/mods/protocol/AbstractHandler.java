@@ -1,13 +1,13 @@
 package mnm.mods.protocol;
 
-import com.google.common.collect.Maps;
+import java.util.Map;
 
 import mnm.mods.protocol.interfaces.PacketRead;
 import mnm.mods.protocol.interfaces.PacketWrite;
 import mnm.mods.protocol.interfaces.VersionHandler;
 import net.minecraft.network.Packet;
 
-import java.util.Map;
+import com.google.common.collect.Maps;
 
 public abstract class AbstractHandler implements VersionHandler {
 

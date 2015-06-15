@@ -1,4 +1,4 @@
-package mnm.mods.protocol.protocol;
+package mnm.mods.protocol.handlers;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ public class Handshake implements PacketWrite {
     private int target;
 
     public Handshake(int target) {
-        // TODO Auto-generated constructor stub
+        this.target = target;
     }
 
     @Override
@@ -24,5 +24,4 @@ public class Handshake implements PacketWrite {
     public void writePacketData(PacketBuffer buffer) throws IOException {
         buffer.setByte(1, target);
     }
-
 }

@@ -4,19 +4,23 @@ import java.io.File;
 import java.util.Map;
 
 import mnm.mods.protocol.gui.MultiplayerMenu;
+import mnm.mods.protocol.handlers.CurrentHandler;
+import mnm.mods.protocol.handlers.v4.Handler_4;
+import mnm.mods.protocol.handlers.v5.Handler_5;
 import mnm.mods.protocol.interfaces.PacketRead;
 import mnm.mods.protocol.interfaces.PacketWrite;
 import mnm.mods.protocol.interfaces.VersionHandler;
-import mnm.mods.protocol.protocol.v4.Handler_4;
-import mnm.mods.protocol.protocol.v47.Handler_47;
-import mnm.mods.protocol.protocol.v5.Handler_5;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import com.google.common.collect.Maps;
 import com.mumfrey.liteloader.RenderListener;
@@ -32,6 +36,19 @@ public class LiteModProtocol4 implements RenderListener {
 
     private Map<EnumProtocols, VersionHandler> handlers = Maps.newEnumMap(EnumProtocols.class);
     private EnumProtocols protocol = EnumProtocols.CURRENT;
+
+    static {
+        // enableDebug();
+    }
+
+    @SuppressWarnings("unused")
+    private static void enableDebug() {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+        loggerConfig.setLevel(Level.DEBUG);
+        ctx.updateLoggers();
+    }
 
     @Override
     public String getName() {
@@ -49,15 +66,15 @@ public class LiteModProtocol4 implements RenderListener {
 
         addHandler(new Handler_4());
         addHandler(new Handler_5());
-        addHandler(new Handler_47());
+        addHandler(new CurrentHandler());
     }
 
     private void addHandler(VersionHandler handler) {
         handlers.put(handler.getSupportedVersion(), handler);
     }
 
-    public void readPacketData(Packet packet, PacketBuffer buffer) {
-        int read = buffer.readerIndex();
+    public void preReadPacketData(Packet packet, PacketBuffer buffer) {
+        int indx = buffer.readerIndex();
         try {
             PacketRead reader = handlers.get(protocol).getReader(packet.getClass());
             if (reader != null)
@@ -66,11 +83,11 @@ public class LiteModProtocol4 implements RenderListener {
         } catch (Throwable e) {
             logger.throwing(e);
         } finally {
-            buffer.readerIndex(read);
+            buffer.readerIndex(indx);
         }
     }
 
-    public void writePacketData(Packet packet, PacketBuffer buffer) {
+    public void postWritePacketData(Packet packet, PacketBuffer buffer) {
         try {
             PacketWrite writer = handlers.get(protocol).getWriter(packet.getClass());
             if (writer != null)
@@ -78,6 +95,8 @@ public class LiteModProtocol4 implements RenderListener {
 
         } catch (Throwable e) {
             logger.throwing(e);
+        } finally {
+            buffer.readerIndex(0);
         }
     }
 
